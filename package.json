@@ -1,0 +1,20 @@
+{
+  "name": "classicube",
+  "version": "1.0.0",
+  "description": "Classicube NPM libary!",
+  "main": "index.js",
+  "keywords": ["classicube", "minecraft", "classic", "0.30", "030", "protocol", "got", "http", "api"],
+  "author": "y0urfr1end",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "got": "^11.8.2",
+    "set-cookie-parser": "^2.4.8",
+    "tough-cookie": "^4.0.0"
+  }
+}
