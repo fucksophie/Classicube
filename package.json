@@ -1,9 +1,19 @@
 {
   "name": "classicube",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Classicube NPM libary!",
   "main": "index.js",
-  "keywords": ["classicube", "minecraft", "classic", "0.30", "030", "protocol", "got", "http", "api"],
+  "keywords": [
+    "classicube",
+    "minecraft",
+    "classic",
+    "0.30",
+    "030",
+    "protocol",
+    "got",
+    "http",
+    "api"
+  ],
   "author": "y0urfr1end",
   "license": "MIT",
   "devDependencies": {
@@ -16,5 +26,9 @@
     "got": "^11.8.2",
     "set-cookie-parser": "^2.4.8",
     "tough-cookie": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourfriendoss/Classicube.git"
   }
 }
