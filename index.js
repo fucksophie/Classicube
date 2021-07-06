@@ -1,34 +1,61 @@
-const got = require('got');
-const FormData = require('form-data');
+/* eslint-disable prefer-destructuring */
+const axios = require('axios');
 const { CookieJar } = require('tough-cookie');
-const setCookie = require('set-cookie-parser');
+const querystring = require('querystring');
+const fs = require('fs');
 
-module.exports.getAccount = async (username, password) => {
-  const cj = new CookieJar();
-  const form = new FormData();
-
-  const pre = await got('http://www.classicube.net/api/login/');
-
-  const cookies = setCookie.parse(pre, { decodeValues: true, map: true });
-
-  cj.setCookieSync(`session=${cookies.session.value}`, 'http://www.classicube.net');
-
-  form.append('username', encodeURI(username));
-  form.append('password', password);
-  form.append('token', encodeURI(JSON.parse(pre.body).token));
-
-  const post = await got.post('http://www.classicube.net/api/login', {
-    body: form,
-    cookieJar: cj,
-  }).json();
-
-  if (post.authenticated) {
-    return {
-      session: cookies.session.value,
-      token: post.token,
-      username: post.username,
-    };
+class ClassiCube {
+  constructor(file) {
+    this.file = file;
   }
 
-  throw new Error(`Errors authenicating! ${JSON.stringify(post)}`);
-};
+  async login(username, password) {
+    if (this.checkCache()) return;
+
+    const first = await axios.get('http://www.classicube.net/api/login');
+
+    this.jar = new CookieJar();
+    this.jar.setCookieSync(first.headers['set-cookie'][0].split(';')[0], 'http://www.classicube.net/');
+
+    this.session = first.headers['set-cookie'][0].split(';')[0];
+
+    const second = await axios.post('http://www.classicube.net/api/login', querystring.stringify({
+      username,
+      password,
+      token: first.data.token,
+    }), {
+      headers: {
+        Cookie: this.jar.getCookieStringSync('http://www.classicube.net/'),
+      },
+    });
+
+    fs.writeFileSync(this.file, JSON.stringify({
+      session: second.headers['set-cookie'][0],
+    }));
+  }
+
+  checkCache() {
+    if (fs.existsSync(this.file)) {
+      const account = JSON.parse(fs.readFileSync(this.file));
+
+      this.session = account.session;
+
+      this.jar = new CookieJar();
+      this.jar.setCookieSync(account.session, 'http://www.classicube.net/');
+      return true;
+    }
+
+    return false;
+  }
+
+  async getServers() {
+    const resp = await axios.get('http://www.classicube.net/api/servers', {
+      headers: {
+        Cookie: this.jar.getCookieStringSync('http://www.classicube.net/'),
+      },
+    });
+    return resp.data;
+  }
+}
+
+module.exports = ClassiCube;
