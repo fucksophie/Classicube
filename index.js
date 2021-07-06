@@ -15,6 +15,7 @@ class ClassiCube {
     const first = await axios.get('http://www.classicube.net/api/login');
 
     this.jar = new CookieJar();
+
     this.jar.setCookieSync(first.headers['set-cookie'][0].split(';')[0], 'http://www.classicube.net/');
 
     this.session = first.headers['set-cookie'][0].split(';')[0];
@@ -28,6 +29,10 @@ class ClassiCube {
         Cookie: this.jar.getCookieStringSync('http://www.classicube.net/'),
       },
     });
+
+    this.session = second.headers['set-cookie'][0].split(';')[0];
+
+    this.jar.setCookieSync(this.session, 'http://www.classicube.net/');
 
     fs.writeFileSync(this.file, JSON.stringify({
       session: second.headers['set-cookie'][0],
