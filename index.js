@@ -32,6 +32,7 @@ class ClassiCube {
     });
 
     this.session = second.headers['set-cookie'][0].split(';')[0];
+    this.username = second.data.username;
 
     this.jar.setCookieSync(this.session, 'http://www.classicube.net/');
     if (this.caching) {
@@ -53,6 +54,10 @@ class ClassiCube {
     }
 
     return false;
+  }
+
+  getUsername() {
+    return this.username;
   }
 
   async getServers() {
