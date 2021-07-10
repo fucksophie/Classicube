@@ -5,8 +5,9 @@ const querystring = require('querystring');
 const fs = require('fs');
 
 class ClassiCube {
-  constructor(file) {
+  constructor(file, doCache = true) {
     this.file = file;
+    this.caching = doCache;
   }
 
   async login(username, password) {
@@ -33,14 +34,15 @@ class ClassiCube {
     this.session = second.headers['set-cookie'][0].split(';')[0];
 
     this.jar.setCookieSync(this.session, 'http://www.classicube.net/');
-
-    fs.writeFileSync(this.file, JSON.stringify({
-      session: second.headers['set-cookie'][0],
-    }));
+    if (this.caching) {
+      fs.writeFileSync(this.file, JSON.stringify({
+        session: second.headers['set-cookie'][0],
+      }));
+    }
   }
 
   checkCache() {
-    if (fs.existsSync(this.file)) {
+    if (fs.existsSync(this.file) && this.caching) {
       const account = JSON.parse(fs.readFileSync(this.file));
 
       this.session = account.session;
