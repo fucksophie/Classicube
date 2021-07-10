@@ -13,6 +13,8 @@ class ClassiCube {
   }
 
   async login(username, password) {
+    this.username = username;
+
     if (this.checkCache()) return;
 
     const first = await axios.get('http://www.classicube.net/api/login');
