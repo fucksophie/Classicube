@@ -3,10 +3,12 @@ const axios = require('axios');
 const { CookieJar } = require('tough-cookie');
 const querystring = require('querystring');
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 class ClassiCube {
   constructor(file, doCache = true) {
-    this.file = file;
+    this.file = path.join(os.tmpdir(), file);
     this.caching = doCache;
   }
 
