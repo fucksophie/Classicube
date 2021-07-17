@@ -1,4 +1,5 @@
 # ClassiCube NPM library!
+## yourfriend's miniprojects, project #7
 
 The ClassiCube NPM library can be used to interact with ClassiCube's API's in a bunch of ways.  
 You can player info, you can get servers and most importantly everything can be cached!
